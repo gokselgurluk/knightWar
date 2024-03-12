@@ -21,6 +21,7 @@ while (true){
     System.out.println("3 Magara (Savaş Alanı) Canavar:Zombi  Ödül:Yemek");
     System.out.println("4 Orman  (Savaş Alanı) Canavar:Vampir Ödül:Odun");
     System.out.println("5 Nehir  (Savaş Alanı) Canavar:Ayı    Ödül:Su");
+    //6. bolumu lısteledık
     System.out.println("6 Maden  (Savaş Alanı) Canavar:Yılan  Ödül: Para, Silah veya Zırh");
     System.out.println("0 Çıkış Yap");
     System.out.println("Lütfen Gitmek istediginiz bölgeyi seçiniz");
@@ -48,7 +49,7 @@ while (true){
             zone=new River(player) ;
             break;
         case 6:
-            zone=new Mine(player) ;
+            zone=new Mine(player) ;//6. bolumu ekledık
             break;
         default:
             zone=new SafeHouse(player) ;

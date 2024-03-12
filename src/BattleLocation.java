@@ -18,7 +18,7 @@ public abstract class BattleLocation extends Zone {
     }
 
     @Override
-    public boolean onZone() {
+    public boolean onZone() {//bölüme tekrar giriş yapılmak istendigin de odul kazanılması durumuna göre kontrol edıyoruz
 
         if (getPlayer().getInventory().getFoodAward() == 1 && this.getName().equals("Magara")) {
             System.out.println("########## Magara bölümünü bitirdiniz");
@@ -31,7 +31,7 @@ public abstract class BattleLocation extends Zone {
         if(getPlayer().getInventory().getWaterAward() == 1 && this.getName().equals("Nehir")) {
                 System.out.println("########## Nehir bölümünü bitirdiniz");
                 return true;
- ////
+
             } else {
             int monsterNum=this.randomMonster();
             if(this.getName().equals("Maden")){
@@ -42,14 +42,14 @@ public abstract class BattleLocation extends Zone {
             System.out.println("Dikaktli Ol Burada   " + monsterNum + " tane " + this.getMonster().getName() + "  Yaşıyor");
             System.out.println("<S>avaş" + "veya" + "<K>aç");
             String palyerSelect = inputSelect.nextLine();
-            // palyerSelect=palyerSelect.toUpperCase();
+
             System.out.println("Savaş Başladı");
 
             if (palyerSelect.equalsIgnoreCase("S") ) {
                 combat(monsterNum);
             }
 
-            if (this.getName().equals("Magara")) {
+            if (this.getName().equals("Magara")) {//bölum dekı canavarlar oldugun de bolume gore odul verıyoruz
                 getPlayer().getInventory().setFoodAward(1);
 
             }
@@ -75,7 +75,7 @@ public abstract class BattleLocation extends Zone {
     public boolean combat(int monsterNumber) {
         for (int i = 1; i <= monsterNumber; i++) {
             this.getMonster().setHealt(this.getMonster().getBasicHealt());
-            if(this.getMonster().getName().equals("Yilan")){
+            if(this.getMonster().getName().equals("Yilan")){//karsılasılan canvarsa hasarını random olarak belırlıyoruz
                 this.getMonster().setDamage(randomDamage());
             }
             playerStats();
@@ -84,8 +84,8 @@ public abstract class BattleLocation extends Zone {
                 System.out.println("<V>ur veya <K>aç");
                 String selectCombat = inputSelect.nextLine().toUpperCase();
                 if (selectCombat.equals("V")) {
-                    int rand = (int) (Math.random() * 100);
-                    if (rand >= 50) {
+                    int rand = (int) (Math.random() * 10);//vuruş öncelıgını rastgele belırlıyoruz
+                    if (rand >= 5) {
                         System.out.println("Siz Vurdunuz");
                         monster.setHealt(this.monster.getHealt() - this.getPlayer().getTotalDamage());
                         afterHit();
@@ -110,7 +110,7 @@ public abstract class BattleLocation extends Zone {
                 if (this.getMonster().getHealt() < this.getPlayer().getHealt()) {
                     System.out.println("Düşmanı yendiniz");
 
-                    if(this.getMonster().getName().equals("Yilan")){
+                    if(this.getMonster().getName().equals("Yilan")){//canvar yılansa random ıtem dusuyor
                         randomItem();
 
                     }else {
@@ -129,34 +129,39 @@ public abstract class BattleLocation extends Zone {
         return false;
     }
 
-    public int randomDamage(){
+    public int randomDamage(){//Yılan canvarı için 3-6 arası hasar içinsayı uretıyoruz
         Random random= new Random();
         int randomDamege;
         randomDamege=random.nextInt(3,this.monster.getDamage());
-       /* if ( randomDamege<3){
-           return 3;
-        }*/
         return randomDamege;
     }
-    public void randomItem(){
+    public int randomSnake() {// Maden bölgesın de yılan sayısının random olması
+        int monsterNumber=0;
+        Random random = new Random();
+        while (monsterNumber < 1 ){
+            monsterNumber = random.nextInt(getMaxMonster());
+        }
+        return monsterNumber;
+    }
+    public void randomItem(){//yılan canavarı oldugun da ıcınden düşecek eşya ıhtımalnin oranına gore hesaplama
         int number= (int) (Math.random() * 100);
         //Silah Kazanma İhtimali : 15%
         if(number<=15){
-            int randomNumber= (int) (Math.random() * 100);
+            int randomWeapon= (int) (Math.random() * 100);
 
-            if(randomNumber<=20)
+            if(randomWeapon<=20)
             {
                 this.getPlayer().getInventory().setWeapon(Weapon.getWeaponObjByID(1));
                 System.out.println("Ödül Silah : "+Weapon.getWeaponObjByID(1).getName());
                 //Tüfek Kazanma İhtimali : 20%
             }
-            if((randomNumber >15) && (randomNumber <50 ))
+            if((randomWeapon <50 ))
             {
                 this.getPlayer().getInventory().setWeapon(Weapon.getWeaponObjByID(2));
                 System.out.println("Ödül Silah: "+Weapon.getWeaponObjByID(2).getName());
                 // Kılıç Kazanma İhtimali : 30%
             }
-            if(randomNumber >= 50)
+            if(randomWeapon<100)
             {
                 this.getPlayer().getInventory().setWeapon(Weapon.getWeaponObjByID(3));
                 System.out.println("Ödül Silah: "+Weapon.getWeaponObjByID(3).getName());
@@ -165,22 +170,22 @@ public abstract class BattleLocation extends Zone {
 
         }
         //Zırh Kazanma İhtimali : 15%
-        if((number >15) && (number <=30 )){
-            int randomNumber= (int) (Math.random() * 100);
+        if((number<=30 )){
+            int randomArmor= (int) (Math.random() * 100);
 
-            if(randomNumber<=20)
+            if(randomArmor<=20)
             {
                 this.getPlayer().getInventory().setArmor(Armor.getArmorObjByID(1));
                 System.out.println("Ödül Zırh: "+Armor.getArmorObjByID(1).getName());
                 //Tüfek Kazanma İhtimali : 20%
             }
-            if((randomNumber >21) && (randomNumber <50 ))
+            if((randomArmor <50 ))
             {
                 this.getPlayer().getInventory().setArmor(Armor.getArmorObjByID(2));
                 System.out.println("Ödül Zırh: "+Armor.getArmorObjByID(2).getName());
                 // Kılıç Kazanma İhtimali : 30%
             }
-            if(randomNumber>=50)
+            if(randomArmor<100)
             {
                 this.getPlayer().getInventory().setArmor(Armor.getArmorObjByID(3));
                 System.out.println("Ödül Zırh: "+Armor.getArmorObjByID(3).getName());
@@ -189,23 +194,23 @@ public abstract class BattleLocation extends Zone {
 
         }
        // Para Kazanma İhtimali : 25%
-        if((number >30) && (number <=55 )){
-            int randomNumber= (int) (Math.random() * 100);
+        if((number <=55 )){
+            int randomNoah= (int) (Math.random() * 100);
 
-            if(randomNumber<=20)
+            if(randomNoah<=20)
             {
                 this.getPlayer().setMoney(getPlayer().getMoney()+10);
                 System.out.println("Ödül para: "+10);
                 //
                 //10 Para Kazanma İhtimali: 20%
             }
-            if((randomNumber >20) && (randomNumber <50 ))
+            if((randomNoah <50 ))
             {
                 this.getPlayer().setMoney(getPlayer().getMoney()+5);
                 System.out.println("Ödül para: "+5);
                 // 5 Para Kazanma İhtimali: 30%
             }
-            if(randomNumber>=50)
+            if(randomNoah<100)
             {
                 this.getPlayer().setMoney(getPlayer().getMoney()+1);
                 System.out.println("Ödül para: "+1);
@@ -214,7 +219,7 @@ public abstract class BattleLocation extends Zone {
             }
 
         }
-        if((number > 55)) {
+        if((number <100)) {
             System.out.println("Ödül Kazanamadınız");
         }
 
@@ -245,14 +250,7 @@ public abstract class BattleLocation extends Zone {
 
 
     }
-    public int randomSnake() {
-        int monsterNumber=0;
-        Random random = new Random();
-        while (monsterNumber < 1 ){
-            monsterNumber = random.nextInt(getMaxMonster());
-        }
-       return monsterNumber;
-    }
+
     public int randomMonster() {
 
         Random random = new Random();

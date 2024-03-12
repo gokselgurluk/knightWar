@@ -29,7 +29,7 @@ public class Player {
                 +"\tFood Ödül: "+this.getInventory().getFoodAward()
                 +"\tFireWood Ödül: "+this.getInventory().getFirewoodAward()
                 +"\tWater Ödül: "+this.getInventory().getWaterAward());
-
+                //kazanılan ödullerı varsa sureklı lıstelıyoruz
     }
 
     public int getTotalDamage(){
